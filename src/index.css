@@ -1,0 +1,98 @@
+@import url('https://rsms.me/inter/inter.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 250 250 249;
+  --surface: 255 255 255;
+  --elevated: 255 255 255;
+  --border: 231 229 228;
+  --fg: 23 23 23;
+  --muted: 115 115 115;
+  --accent: 234 88 12;
+
+  --chart-1: 234 88 12;
+  --chart-2: 14 165 233;
+  --chart-3: 22 163 74;
+  --chart-4: 168 85 247;
+  --chart-5: 234 179 8;
+
+  --tooltip-bg: 255 255 255;
+  --grid: 229 231 235;
+}
+
+.dark {
+  --bg: 10 10 11;
+  --surface: 24 24 27;
+  --elevated: 32 32 36;
+  --border: 39 39 42;
+  --fg: 244 244 245;
+  --muted: 161 161 170;
+  --accent: 251 146 60;
+
+  --chart-1: 251 146 60;
+  --chart-2: 56 189 248;
+  --chart-3: 74 222 128;
+  --chart-4: 192 132 252;
+  --chart-5: 250 204 21;
+
+  --tooltip-bg: 32 32 36;
+  --grid: 63 63 70;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+html {
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: 'cv11', 'ss03', 'tnum';
+}
+
+body {
+  @apply bg-bg text-fg antialiased;
+  background-image:
+    radial-gradient(at 20% -10%, rgb(var(--accent) / 0.08), transparent 50%),
+    radial-gradient(at 90% 10%, rgb(var(--chart-2) / 0.06), transparent 50%);
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(at 20% -10%, rgb(var(--accent) / 0.12), transparent 55%),
+    radial-gradient(at 90% 10%, rgb(var(--chart-2) / 0.08), transparent 55%);
+}
+
+/* Recharts overrides so charts look good in both themes */
+.recharts-cartesian-axis-tick text,
+.recharts-polar-angle-axis-tick text,
+.recharts-polar-radius-axis-tick text,
+.recharts-legend-item-text {
+  fill: rgb(var(--muted)) !important;
+  color: rgb(var(--muted)) !important;
+  font-size: 12px;
+}
+
+.recharts-cartesian-grid line,
+.recharts-cartesian-axis-line {
+  stroke: rgb(var(--grid)) !important;
+}
+
+.recharts-default-tooltip {
+  background-color: rgb(var(--tooltip-bg)) !important;
+  border: 1px solid rgb(var(--border)) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.25) !important;
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item {
+  color: rgb(var(--fg)) !important;
+}
+
+/* Subtle scrollbar for tables */
+.scroll-soft::-webkit-scrollbar { height: 8px; width: 8px; }
+.scroll-soft::-webkit-scrollbar-track { background: transparent; }
+.scroll-soft::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 8px; }
+.scroll-soft::-webkit-scrollbar-thumb:hover { background: rgb(var(--muted) / 0.5); }

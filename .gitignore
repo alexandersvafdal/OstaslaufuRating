@@ -1,0 +1,23 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+# Build artefacts
+node_modules
+dist
+dist-ssr
+*.local
+
+# Test/coverage
+coverage
+*.tsbuildinfo
+
+# Claude
+.claude/
