@@ -7,16 +7,31 @@ import { fmt, fmtDate } from '../lib/format';
 type Col = 'date' | 'store' | 'overall' | 'fylling' | 'end';
 type SortDir = 'asc' | 'desc';
 
-function metricCell(value: number | null) {
-  if (value === null) return <span className="text-muted">—</span>;
+const STOP_LOW = [239, 68, 68];     // red-500
+const STOP_MID = [250, 204, 21];    // yellow-400
+const STOP_HIGH = [34, 197, 94];    // green-500
+
+function ratingColor(value: number): [number, number, number] {
   const t = Math.max(0, Math.min(1, value / 10));
-  const r = Math.round(248 - (248 - 34) * t);
-  const g = Math.round(113 + (197 - 113) * t);
-  const b = Math.round(113 - (113 - 94) * t);
+  const [from, to, k] = t < 0.5
+    ? [STOP_LOW, STOP_MID, t * 2]
+    : [STOP_MID, STOP_HIGH, (t - 0.5) * 2];
+  return [
+    Math.round(from[0] + (to[0] - from[0]) * k),
+    Math.round(from[1] + (to[1] - from[1]) * k),
+    Math.round(from[2] + (to[2] - from[2]) * k),
+  ];
+}
+
+function metricCell(value: number | null, emphasized = false) {
+  if (value === null) return <span className="text-muted">—</span>;
+  const [r, g, b] = ratingColor(value);
   return (
     <span
-      className="inline-flex min-w-[2.5rem] justify-center rounded-md px-2 py-0.5 font-mono text-xs tabular-nums"
-      style={{ backgroundColor: `rgb(${r} ${g} ${b} / 0.18)`, color: `rgb(${r} ${g} ${b})` }}
+      className={`inline-flex min-w-[2.5rem] justify-center rounded-md px-2 py-0.5 font-mono tabular-nums ${
+        emphasized ? 'text-sm font-semibold' : 'text-xs'
+      }`}
+      style={{ backgroundColor: `rgb(${r} ${g} ${b} / 0.2)`, color: `rgb(${r} ${g} ${b})` }}
     >
       {fmt(value)}
     </span>
@@ -76,9 +91,9 @@ export function RecentRatingsTable({ ratings }: { ratings: Rating[] }) {
               <tr>
                 <Th col="date" label="Date" />
                 <Th col="store" label="Store" />
-                <Th col="overall" label="Overall" align="right" />
                 <Th col="fylling" label="Filling" align="right" />
                 <Th col="end" label="Texture" align="right" />
+                <Th col="overall" label="Overall" align="right" />
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -86,9 +101,9 @@ export function RecentRatingsTable({ ratings }: { ratings: Rating[] }) {
                 <tr key={i} className="hover:bg-bg/40">
                   <td className="px-3 py-2 font-mono text-xs tabular-nums">{fmtDate(r.date)}</td>
                   <td className="px-3 py-2">{r.store}</td>
-                  <td className="px-3 py-2 text-right">{metricCell(r.overall)}</td>
                   <td className="px-3 py-2 text-right">{metricCell(r.fylling)}</td>
                   <td className="px-3 py-2 text-right">{metricCell(r.end)}</td>
+                  <td className="px-3 py-2 text-right">{metricCell(r.overall, true)}</td>
                 </tr>
               ))}
             </tbody>
